@@ -1,21 +1,21 @@
-local Config = require("testcover.libs.config")
+local config = require("testcover.libs.config")
 
-describe("Config setup", function()
+describe("config setup", function()
 
   it("should have default settings", function()
     -- Given
 
     -- When
-    Config.setup()
+    config.setup()
 
     -- Then
-    assert.equal(Config.defaults.keymap, Config.settings.keymap)
-    assert.equal(Config.defaults.covered.highlight, Config.settings.covered.highlight)
-    assert.equal(Config.defaults.covered.sign, Config.settings.covered.sign)
-    assert.equal(Config.defaults.uncovered.highlight, Config.settings.uncovered.highlight)
-    assert.equal(Config.defaults.uncovered.sign, Config.settings.uncovered.sign)
-    assert.equal(Config.defaults.display_coverage, Config.settings.display_coverage)
-    assert.equal(Config.defaults.auto_run, Config.settings.auto_run)
+    assert.equal(config.defaults.keymap, config.settings.keymap)
+    assert.equal(config.defaults.covered.highlight, config.settings.covered.highlight)
+    assert.equal(config.defaults.covered.sign, config.settings.covered.sign)
+    assert.equal(config.defaults.uncovered.highlight, config.settings.uncovered.highlight)
+    assert.equal(config.defaults.uncovered.sign, config.settings.uncovered.sign)
+    assert.equal(config.defaults.display_coverage, config.settings.display_coverage)
+    assert.equal(config.defaults.auto_run, config.settings.auto_run)
   end)
 
   it("should have custom settings", function()
@@ -31,18 +31,18 @@ describe("Config setup", function()
     }
 
     -- When
-    Config.setup(custom_settings)
+    config.setup(custom_settings)
 
     -- Then
-    assert.equal(custom_settings.keymap, Config.settings.keymap)
-    assert.equal(custom_settings.covered.highlight, Config.settings.covered.highlight)
-    assert.equal(custom_settings.covered.sign, Config.settings.covered.sign)
+    assert.equal(custom_settings.keymap, config.settings.keymap)
+    assert.equal(custom_settings.covered.highlight, config.settings.covered.highlight)
+    assert.equal(custom_settings.covered.sign, config.settings.covered.sign)
 
-    assert.equal(Config.defaults.uncovered.highlight, Config.settings.uncovered.highlight)
-    assert.equal(Config.defaults.uncovered.sign, Config.settings.uncovered.sign)
+    assert.equal(config.defaults.uncovered.highlight, config.settings.uncovered.highlight)
+    assert.equal(config.defaults.uncovered.sign, config.settings.uncovered.sign)
 
-    assert.equal(custom_settings.display_coverage, Config.settings.display_coverage)
-    assert.equal(custom_settings.auto_run, Config.settings.auto_run)
+    assert.equal(custom_settings.display_coverage, config.settings.display_coverage)
+    assert.equal(custom_settings.auto_run, config.settings.auto_run)
   end)
 
 

@@ -14,12 +14,6 @@ function M.run()
   end
 end
 
-function M.testCurrentFile()
-  local current_file = vim.api.nvim_buf_get_name(0)
-
-  vim.cmd("PlenaryBustedFile " .. current_file)
-end
-
 function M.setup(user_config)
   config.setup(user_config)
 
@@ -35,8 +29,12 @@ function M.setup(user_config)
 
 
 
-
-  vim.api.nvim_create_user_command("TestCoverTest", M.testCurrentFile, { nargs = 0 })
+  -- Temporary test runner for plugin development
+  vim.api.nvim_create_user_command("TestCoverTest", function()
+    local current_file = vim.api.nvim_buf_get_name(0)
+    vim.cmd("PlenaryBustedFile " .. current_file)
+  end
+  , { nargs = 0 })
   vim.api.nvim_create_autocmd("BufWritePost", {
     pattern = "*_test.lua",
     command = "TestCoverTest",
