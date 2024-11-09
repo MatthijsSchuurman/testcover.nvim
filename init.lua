@@ -7,7 +7,7 @@ local M = {}
 
 function M.run()
   local test_results = test.run()
-  local coverage_results = coverage.parse(test_results)
+  local coverage_results = coverage.parse(test_results.coverageFilename)
 
   if config.settings.display_coverage then
     visualiser.gutter(coverage_results)
