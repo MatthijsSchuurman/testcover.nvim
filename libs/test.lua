@@ -7,8 +7,10 @@ function Test.run()
 
   if type == "go" then
     vim.api.nvim_command("!go test -coverprofile=" .. coverageFile)
+
+    vim.notify("TestCover: Running tests for " .. file)
   else
-    print("Unsupported filetype: " .. type)
+    vim.notify("TestCover does not support filetype: " .. type)
   end
 
   return coverageFile
