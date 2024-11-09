@@ -12,9 +12,6 @@ Config.defaults = {
     },
     display_coverage = true,
     auto_run = false,
-
-    _test_mode = false,
-    _test_keymap = "<leader>tc",
 }
 
 Config.settings = {}
