@@ -1,11 +1,10 @@
 local Test = {}
 
-function Test.run()
-  local file = vim.api.nvim_buf_get_name(0)
-  local type = vim.api.nvim_buf_get_option(0, "filetype")
-  local coverageFile = "coverage.out"
+function Test.run(filename)
+  local coverageFile
 
   if type == "go" then
+    coverageFile = "coverage.out"
     vim.api.nvim_command("!go test -coverprofile=" .. coverageFile)
 
     vim.notify("TestCover: Running tests for " .. file)
