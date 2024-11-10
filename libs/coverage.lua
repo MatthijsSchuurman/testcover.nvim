@@ -5,7 +5,7 @@ function Coverage.parse(filename)
   local type = string.match(filename, ".*[/\\](.*)")
 
   if type == "coverage.out" then
-    r, error = Coverage.parse_gcov(filename)
+    r, error = Coverage.parseGCOV(filename)
   else
     return nil, {
       type = "error",
@@ -22,14 +22,14 @@ function Coverage.parse(filename)
   return r, error
 end
 
-function Coverage.parse_gcov(filename)
+function Coverage.parseGCOV(filename)
   local r = {}
 
   local file = io.open(filename, "r")
   if not file then
     return nil, {
       type = "error",
-      section = "Coverage.parse_gcov",
+      section = "Coverage.parseGCOV",
       message = "Could not open file",
       data = {
         filename = filename,
@@ -42,7 +42,7 @@ function Coverage.parse_gcov(filename)
       if not string.match(line, "set") then
         return nil, {
           type = "error",
-          section = "Coverage.parse_gcov",
+          section = "Coverage.parseGCOV",
           message = "Only mode: set is supported",
           data = {
             filename = filename,

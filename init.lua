@@ -25,8 +25,8 @@ function M.run()
   end
 end
 
-function M.setup(user_config)
-  config.setup(user_config)
+function M.setup(userConfig)
+  config.setup(userConfig)
 
   vim.api.nvim_create_user_command("TestCover", M.run, { nargs = 0 })
   vim.api.nvim_set_keymap("n", config.settings.keymap, ":TestCover<CR>", { noremap = true, silent = true })
@@ -41,8 +41,8 @@ function M.setup(user_config)
 
   -- Temporary test runner for plugin development
   vim.api.nvim_create_user_command("TestCoverTest", function()
-    local current_file = vim.api.nvim_buf_get_name(0)
-    vim.cmd("PlenaryBustedFile " .. current_file)
+    local currentFile = vim.api.nvim_buf_get_name(0)
+    vim.cmd("PlenaryBustedFile " .. currentFile)
   end
   , { nargs = 0 })
   vim.api.nvim_create_autocmd("BufWritePost", {

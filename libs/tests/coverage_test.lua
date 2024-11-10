@@ -1,15 +1,15 @@
-local coverage = require("testcover.libs.coverage")
+  local coverage = require("testcover.libs.coverage")
 
-describe("Coverage", function()
-  it("should parse coverage file", function()
-    -- Given
-    local coverageFile = "libs/tests/example/coverage.out"
-    local expectedCoverage = {["example/example.go"] = {} }
+  describe("Coverage", function()
+    it("should parse coverage file", function()
+      -- Given
+      local coverageFile = "libs/tests/example/coverage.out"
+      local expectedCoverage = {["example/example.go"] = {} }
 
-    table.insert(expectedCoverage["example/example.go"], {
-      tests = 1,
-      start = {
-        line = 3,
+      table.insert(expectedCoverage["example/example.go"], {
+        tests = 1,
+        start = {
+          line = 3,
         column = 21
       },
       finish = {
@@ -61,7 +61,7 @@ describe("Coverage", function()
     assert.is_not_nil(error)
     assert.same({
       type = "error",
-      section = "Coverage.parse_gcov",
+      section = "Coverage.parseGCOV",
       message = "Could not open file",
       data = {
         filename = coverageFile

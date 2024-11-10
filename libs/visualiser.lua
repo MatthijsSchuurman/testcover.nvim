@@ -1,6 +1,6 @@
 local Visualiser = {}
 
-function Visualiser.gutter(coverage_data)
+function Visualiser.gutter(coverageData)
 
 end
 

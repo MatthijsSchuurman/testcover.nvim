@@ -16,8 +16,8 @@ Config.defaults = {
 
 Config.settings = {}
 
-function Config.setup(user_config)
-  Config.settings = vim.tbl_extend("force", Config.settings, Config.defaults, user_config or {})
+function Config.setup(userConfig)
+  Config.settings = vim.tbl_extend("force", Config.settings, Config.defaults, userConfig or {})
 end
 
 return Config
