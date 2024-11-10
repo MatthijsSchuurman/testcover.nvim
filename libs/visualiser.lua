@@ -8,7 +8,7 @@ function Visualiser.results(results, success)
   if success then
     vim.notify("TestCover: Tests passed", "info")
   else
-    vim.notify("TestCover: Tests failed\n" .. results, "error")
+    vim.notify("TestCover: Tests failed\n\n\n" .. results, "error")
   end
 end
 

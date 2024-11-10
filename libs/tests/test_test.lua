@@ -38,4 +38,15 @@ describe("Test", function()
     assert.is_true(fileExists(testResults.coverageFilename))
     os.remove(testResults.coverageFilename)
   end)
+
+  it("should not run unknown type", function()
+    -- Given
+    local filename = "libs/tests/data/example.unknown"
+
+    -- When
+    local testResults = test.run(filename)
+
+    -- Then
+    assert.is_nil(testResults)
+  end)
 end)

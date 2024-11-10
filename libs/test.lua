@@ -6,7 +6,7 @@ function Test.getFileType(filename)
 end
 
 function Test.run(filename)
-  local r= {
+  local r = {
     type,
     results,
     success,
@@ -31,7 +31,6 @@ function Test.run(filename)
       r.success = true
     end
   else
-    vim.notify("TestCover does not support filetype: " .. type)
     return
   end
 

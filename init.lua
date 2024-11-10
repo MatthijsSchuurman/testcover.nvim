@@ -6,9 +6,15 @@ local visualiser = require("testcover.libs.visualiser")
 local M = {}
 
 function M.run()
+  if vim.b.TestCoverFailed then -- skip if previous run failed
+    return
+  end
+
   local testResults = test.run()
 
   if not testResults then
+    -- vim.notify("TestCover not supported for: " .. vim.bo.filetype, "error")
+    vim.b.TestCoverFailed = true
     return
   end
 
@@ -28,7 +34,6 @@ function M.setup(user_config)
 
   if config.settings.auto_run then
     vim.api.nvim_create_autocmd("BufWritePost", {
-      pattern = "*_test.*",
       command = "TestCover",
     })
   end
