@@ -58,6 +58,7 @@ function Coverage.parse_gcov(filename)
         end
 
         table.insert(r[coveredFilename], {
+          tests = tonumber(count),
           start = {
             line = tonumber(startLine),
             column = tonumber(startColumn),
@@ -66,8 +67,6 @@ function Coverage.parse_gcov(filename)
             line = tonumber(endLine),
             column = tonumber(endColumn),
           },
-          covered = (tonumber(covered) > 0),
-          count = tonumber(count),
         })
       end
     end

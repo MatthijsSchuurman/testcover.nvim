@@ -16,7 +16,7 @@ end
 describe("Test", function()
   it("should get file type", function()
     -- Given
-    local filename = "libs/tests/data/example.go"
+    local filename = "libs/tests/example/example.go"
 
     -- When
     local type = test.getFileType(filename)
@@ -27,7 +27,7 @@ describe("Test", function()
 
   it("should run Go tests", function()
     -- Given
-    local filename = "libs/tests/data/example.go"
+    local filename = "libs/tests/example/example.go"
 
     -- When
     local testResults, error = test.run(filename)
@@ -42,7 +42,7 @@ describe("Test", function()
 
   it("should not run unknown type", function()
     -- Given
-    local filename = "libs/tests/data/example.unknown"
+    local filename = "libs/tests/example/example.unknown"
 
     -- When
     local testResults, error = test.run(filename)
@@ -55,7 +55,7 @@ describe("Test", function()
       section = "Test.run",
       message = "Unsupported filetype",
       data = {
-        filename = "libs/tests/data/example.unknown",
+        filename = "libs/tests/example/example.unknown",
         type = "unknown"
       }
     }, error)
