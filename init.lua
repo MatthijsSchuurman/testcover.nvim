@@ -6,10 +6,16 @@ local visualiser = require("testcover.libs.visualiser")
 local M = {}
 
 function M.run()
-  local test_results = test.run()
-  local coverage_results = coverage.parse(test_results.coverageFilename)
+  local testResults = test.run()
+
+  if not testResults then
+    return
+  end
+
+  visualiser.results(testResults.results, testResults.success)
 
   if config.settings.display_coverage then
+    local coverage_results = coverage.parse(testResults.coverageFilename, testResults.type)
     visualiser.gutter(coverage_results)
   end
 end

@@ -19,10 +19,10 @@ describe("Test", function()
     local filename = "libs/tests/data/example.go"
 
     -- When
-    local result = test.getFileType(filename)
+    local type = test.getFileType(filename)
 
     -- Then
-    assert.are.equal("go", result)
+    assert.are.equal("go", type)
   end)
 
   it("should run Go tests", function()
@@ -30,12 +30,12 @@ describe("Test", function()
     local filename = "libs/tests/data/example.go"
 
     -- When
-    local result = test.run(filename)
+    local testResults = test.run(filename)
 
     -- Then
-    assert.equal("go", result.type)
-    assert.is_true(stringContains(result.output, "PASS"))
-    assert.is_true(fileExists(result.coverageFilename))
-    os.remove(result.coverageFilename)
+    assert.equal("go", testResults.type)
+    assert.is_true(stringContains(testResults.results, "PASS"))
+    assert.is_true(fileExists(testResults.coverageFilename))
+    os.remove(testResults.coverageFilename)
   end)
 end)
