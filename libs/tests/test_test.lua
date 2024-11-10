@@ -30,9 +30,10 @@ describe("Test", function()
     local filename = "libs/tests/data/example.go"
 
     -- When
-    local testResults = test.run(filename)
+    local testResults, error = test.run(filename)
 
     -- Then
+    assert.is_nil(error)
     assert.equal("go", testResults.type)
     assert.is_true(stringContains(testResults.results, "PASS"))
     assert.is_true(fileExists(testResults.coverageFilename))
@@ -44,9 +45,19 @@ describe("Test", function()
     local filename = "libs/tests/data/example.unknown"
 
     -- When
-    local testResults = test.run(filename)
+    local testResults, error = test.run(filename)
 
     -- Then
     assert.is_nil(testResults)
+    assert.is_not_nil(error)
+    assert.same({
+      type = "error",
+      section = "Test.run",
+      message = "Unsupported filetype",
+      data = {
+        filename = "libs/tests/data/example.unknown",
+        type = "unknown"
+      }
+    }, error)
   end)
 end)

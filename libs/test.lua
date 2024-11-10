@@ -18,7 +18,6 @@ function Test.run(filename)
   end
 
   r.type = Test.getFileType(filename)
-
   if r.type == "go" then
     r.coverageFilename = vim.fn.getcwd() .. "/coverage.out"
 
@@ -31,7 +30,15 @@ function Test.run(filename)
       r.success = true
     end
   else
-    return
+    return nil, {
+      type = "error",
+      section = "Test.run",
+      message = "Unsupported filetype",
+      data = {
+        filename = filename,
+        type = r.type,
+      }
+    }
   end
 
   return r

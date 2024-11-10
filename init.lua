@@ -10,10 +10,9 @@ function M.run()
     return
   end
 
-  local testResults = test.run()
-
-  if not testResults then
-    -- vim.notify("TestCover not supported for: " .. vim.bo.filetype, "error")
+  local testResults, error = test.run()
+  if error then
+    vim.notify("TestCover failed: " .. error.message, "error")
     vim.b.TestCoverFailed = true
     return
   end
@@ -21,7 +20,7 @@ function M.run()
   visualiser.results(testResults.results, testResults.success)
 
   if config.settings.display_coverage then
-    local coverage_results = coverage.parse(testResults.coverageFilename, testResults.type)
+    local coverage_results = coverage.parse(testResults.coverageFilename)
     visualiser.gutter(coverage_results)
   end
 end
