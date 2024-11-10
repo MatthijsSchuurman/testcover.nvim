@@ -20,8 +20,8 @@ function M.run()
   visualiser.results(testResults.results, testResults.success)
 
   if config.settings.display_coverage then
-    local coverage_results = coverage.parse(testResults.coverageFilename)
-    visualiser.gutter(coverage_results)
+    local coverageResults = coverage.parse(testResults.coverageFilename)
+    visualiser.gutter(coverageResults)
   end
 end
 
