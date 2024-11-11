@@ -27,6 +27,7 @@ end
 
 function M.setup(userConfig)
   config.setup(userConfig)
+  visualiser.setup()
 
   vim.api.nvim_create_user_command("TestCover", M.run, { nargs = 0 })
   vim.api.nvim_set_keymap("n", config.settings.keymap, ":TestCover<CR>", { noremap = true, silent = true })
