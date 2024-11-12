@@ -25,6 +25,14 @@ function M.run()
   end
 end
 
+function M.loadCoverage()
+  local coverageFilename = coverage.findCoverageFile()
+  if coverageFilename then
+    local coverageResults = coverage.parse(coverageFilename)
+    visualiser.gutter(coverageResults)
+  end
+end
+
 function M.setup(userConfig)
   config.setup(userConfig)
   visualiser.setup()
@@ -35,6 +43,12 @@ function M.setup(userConfig)
   if config.settings.auto_run then
     vim.api.nvim_create_autocmd("BufWritePost", {
       command = "TestCover",
+    })
+  end
+
+  if config.settings.display_coverage then
+    vim.api.nvim_create_autocmd("BufEnter", {
+      command = "lua require('testcover').loadCoverage()",
     })
   end
 

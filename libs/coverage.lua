@@ -1,5 +1,23 @@
 local Coverage = {}
 
+function Coverage.findCoverageFile(directory)
+  if not directory then
+    directory = vim.fn.expand("%:p:h")
+  end
+
+  for i = 1, 10 do -- Limit to 10 directories deep
+    local coverageFilename = directory .. "/coverage.out"
+    if vim.fn.filereadable(coverageFilename) == 1 then
+      return coverageFilename
+    end
+
+    directory = vim.fn.fnamemodify(directory, ":h")
+    if directory == "" then
+      return nil
+    end
+  end
+end
+
 function Coverage.parse(filename)
   local r, error
   local type = string.match(filename, ".*[/\\](.*)")

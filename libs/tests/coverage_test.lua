@@ -1,6 +1,29 @@
   local coverage = require("testcover.libs.coverage")
 
   describe("Coverage", function()
+    it("should find coverage file", function()
+      -- Given
+      local directory = "libs/tests/example"
+
+      -- When
+      local coverageFile = coverage.findCoverageFile(directory)
+
+      -- Then
+      assert.equals("libs/tests/example/coverage.out", coverageFile)
+    end)
+
+    it("should not find coverage file", function()
+      -- Given
+      local directory = "libs/tests"
+
+      -- When
+      local coverageFile = coverage.findCoverageFile(directory)
+
+      -- Then
+      assert.is_nil(coverageFile)
+    end)
+
+
     it("should parse coverage file", function()
       -- Given
       local coverageFile = "libs/tests/example/coverage.out"
@@ -49,6 +72,7 @@
     assert.same(expectedCoverage, coverageResults)
   end)
 
+
   it("should error on file issue", function()
     -- Given
     local coverageFile = "doesntexist/coverage.out"
@@ -68,6 +92,7 @@
       }
     }, error)
   end)
+
 
   it("should error on unsupported file", function()
     -- Given
