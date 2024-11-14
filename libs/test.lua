@@ -1,5 +1,9 @@
 local Test = {}
 
+function Test.getSupportedPattern()
+  return {"*.go"}
+end
+
 function Test.getFileType(filename)
   local ext = vim.fn.fnamemodify(filename, ":e")
   return string.lower(ext)

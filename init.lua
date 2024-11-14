@@ -42,12 +42,14 @@ function M.setup(userConfig)
 
   if config.settings.auto_run then
     vim.api.nvim_create_autocmd("BufWritePost", {
-      command = "TestCover",
+      pattern = test.getSupportedPattern(),
+      callback = vim.schedule_wrap(M.run),
     })
   end
 
   if config.settings.display_coverage then
     vim.api.nvim_create_autocmd("BufEnter", {
+      pattern = test.getSupportedPattern(),
       command = "lua require('testcover').loadCoverage()",
     })
   end
