@@ -2,14 +2,6 @@ local Config = {}
 
 Config.defaults = {
     keymap = "<leader>tc",
-    covered = {
-        highlight = "Comment",
-        sign = "✓"
-    },
-    uncovered = {
-        highlight = "Error",
-        sign = "✗"
-    },
     display_coverage = true,
     auto_run = false,
 }
