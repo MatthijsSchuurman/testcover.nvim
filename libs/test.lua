@@ -21,6 +21,21 @@ function Test.run(filename)
     filename = vim.fn.expand("%")
   end
 
+  if not string.match(filename, "_test") then -- code file, find test file
+    local testFilename = string.gsub(filename, "%.(%w+)$", "_test.%1")
+    if vim.fn.filereadable(testFilename) == 0 then
+      return nil, {
+        type = "error",
+        section = "Test.run",
+        message = "Test file not found",
+        data = {
+          filename = filename,
+          testFilename = testFilename,
+        }
+      }
+    end
+  end
+
   r.type = Test.getFileType(filename)
   if r.type == "go" then
     r.coverageFilename = vim.fn.getcwd() .. "/coverage.out"

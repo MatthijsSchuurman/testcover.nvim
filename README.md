@@ -4,7 +4,7 @@ This plugin automatically runs the tests and shows the coverage in the gutter. I
 ## Installation
 Use your favorite plugin manager to install this plugin. For example, with packer.nvim:
 ```lua
-use 'MatthijsSchuurman/testcover.nvim'
+use "MatthijsSchuurman/testcover.nvim"
 ```
 
 ## Usage
