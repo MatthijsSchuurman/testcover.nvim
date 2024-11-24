@@ -24,15 +24,19 @@ function Test.run(filename)
   if not string.match(filename, "_test") then -- code file, find test file
     local testFilename = string.gsub(filename, "%.(%w+)$", "_test.%1")
     if vim.fn.filereadable(testFilename) == 0 then
-      return nil, {
-        type = "error",
-        section = "Test.run",
-        message = "Test file not found",
-        data = {
-          filename = filename,
-          testFilename = testFilename,
+      local integrationTestFilename = string.gsub(filename, "%.(%w+)$", "_integration_test.%1")
+      if vim.fn.filereadable(testFilename) == 0 then
+        return nil, {
+          type = "error",
+          section = "Test.run",
+          message = "Test file not found",
+          data = {
+            filename = filename,
+            testFilename = testFilename,
+            integrationTestFilename = integrationTestFilename,
+          }
         }
-      }
+      end
     end
   end
 

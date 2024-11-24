@@ -87,7 +87,8 @@ describe("Test", function()
       message = "Test file not found",
       data = {
         filename = "libs/tests/example/doesntexist.go",
-        testFilename = "libs/tests/example/doesntexist_test.go"
+        testFilename = "libs/tests/example/doesntexist_test.go",
+        integrationTestFilename = "libs/tests/example/doesntexist_integration_test.go"
       }
     }, error)
   end)
