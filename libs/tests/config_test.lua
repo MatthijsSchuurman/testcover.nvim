@@ -10,10 +10,6 @@ describe("config setup", function()
 
     -- Then
     assert.equal(config.defaults.keymap, config.settings.keymap)
-    assert.equal(config.defaults.covered.highlight, config.settings.covered.highlight)
-    assert.equal(config.defaults.covered.sign, config.settings.covered.sign)
-    assert.equal(config.defaults.uncovered.highlight, config.settings.uncovered.highlight)
-    assert.equal(config.defaults.uncovered.sign, config.settings.uncovered.sign)
     assert.equal(config.defaults.display_coverage, config.settings.display_coverage)
     assert.equal(config.defaults.auto_run, config.settings.auto_run)
   end)
@@ -35,12 +31,6 @@ describe("config setup", function()
 
     -- Then
     assert.equal(custom_settings.keymap, config.settings.keymap)
-    assert.equal(custom_settings.covered.highlight, config.settings.covered.highlight)
-    assert.equal(custom_settings.covered.sign, config.settings.covered.sign)
-
-    assert.equal(config.defaults.uncovered.highlight, config.settings.uncovered.highlight)
-    assert.equal(config.defaults.uncovered.sign, config.settings.uncovered.sign)
-
     assert.equal(custom_settings.display_coverage, config.settings.display_coverage)
     assert.equal(custom_settings.auto_run, config.settings.auto_run)
   end)

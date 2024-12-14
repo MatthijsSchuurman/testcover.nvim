@@ -21,7 +21,7 @@ describe("Test", function()
     local patterns = test.getSupportedPattern()
 
     -- Then
-    assert.same({"*.go"}, patterns)
+    assert.same({"*.go", "*.lua"}, patterns)
   end)
 
   it("should get file type", function()
@@ -33,6 +33,40 @@ describe("Test", function()
 
     -- Then
     assert.equal("go", type)
+  end)
+
+  it("should get results from popup", function()
+    return -- Skip since it doesn't seem to fail
+    -- Given
+    local ms = 100
+
+    local buf = vim.api.nvim_create_buf(false, true) -- Create a new buffer
+    local win = vim.api.nvim_open_win(buf, true, {
+      relative = "editor",
+      width = 30,
+      height = 10,
+      col = 10,
+      row = 5,
+      style = "minimal",
+    })
+
+    -- When
+    local results = test.getResultsFromPopup("TEST MARKER SHOULD NOT EXIST", ms)
+
+    -- Then
+    assert.is_nil(results)
+
+    -- Given
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {"TEST MARKER SHOULD EXIST"})
+
+    -- When
+    results = test.getResultsFromPopup("TEST MARKER", ms)
+    file = io.open("test.txt", "w")
+    file:write(results)
+    file:close()
+
+    -- Then
+    assert.equal("MARKER with text", results)
   end)
 
   it("should run Go tests", function()

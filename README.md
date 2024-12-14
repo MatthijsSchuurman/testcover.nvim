@@ -14,7 +14,7 @@ To run the tests and show the coverage, use the command `:TestCover`. This will 
 The plugin can be configured by setting the following options:
 ```lua
 require("packer").use({
-  "~/.config/nvim/lua/testcover",
+  "MatthijsSchuurman/testcover.nvim",
   config = function()
     require("testcover").setup({
       keymap = "<leader>tc", -- Keymap to run the tests
@@ -27,13 +27,14 @@ require("packer").use({
 
 
 ## Language support
-| Language | Test | Coverage |
-|----------|------|----------|
-| C        | No   | No       |
-| Go       | Yes  | Yes      |
-| Javascript| No   | No       |
-| Lua      | No   | No       |
-| Python   | No   | No       |
+| Language   | Test | Coverage |
+|------------|------|----------|
+| C          | No   | No       |
+| Go         | Yes  | Yes      |
+| Javascript | No   | No       |
+| Lua        | No   | No       |
+| Lua Neovim | Yes  | No       |
+| Python     | No   | No       |
 
 ## License
 This project is licensed under the terms of the [MIT license](LICENSE.md).
