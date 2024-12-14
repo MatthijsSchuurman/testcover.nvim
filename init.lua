@@ -19,7 +19,7 @@ function M.run()
 
   visualiser.results(testResults.results, testResults.success)
 
-  if config.settings.display_coverage then
+  if config.settings.display_coverage and testResults.coverageFilename then
     local coverageResults = coverage.parse(testResults.coverageFilename)
     visualiser.gutter(coverageResults)
   end
@@ -53,23 +53,6 @@ function M.setup(userConfig)
       command = "lua require('testcover').loadCoverage()",
     })
   end
-
-
-
-  -- Temporary test runner for plugin development
-  vim.api.nvim_create_user_command("TestCoverTest", function()
-    local currentFile = vim.api.nvim_buf_get_name(0)
-    vim.cmd("PlenaryBustedFile " .. currentFile)
-  end
-  , { nargs = 0 })
-  vim.api.nvim_create_autocmd("BufWritePost", {
-    pattern = "*_test.lua",
-    command = "TestCoverTest",
-  })
-
-
-
-
 end
 
 return M
