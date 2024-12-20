@@ -39,8 +39,12 @@ function Visualiser.results(results, success)
   if success then
     vim.notify("TestCover: Tests passed", "info")
   else
-    vim.notify("TestCover: Tests failed\n\n\n" .. results, "error")
+    vim.notify("TestCover: Tests failed\n\n\n" .. Visualiser.formatResults(results), "error")
   end
+end
+
+function Visualiser.formatResults(results)
+  return results:gsub("\x1b%[[%d;]*[mK]", "")
 end
 
 return Visualiser

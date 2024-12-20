@@ -76,8 +76,9 @@ function Test.run(filename)
 
   if r.type == "go" then
     local basedir = vim.fn.fnamemodify(filename, ":h")
-    r.coverageFilename = vim.fn.getcwd() .. "/coverage.out"
-    r.results = vim.fn.system("cd " .. basedir .. " && go test -v -coverprofile=" .. r.coverageFilename .. " .")
+    r.coverageFilename = basedir .. "/coverage.out"
+
+    r.results = vim.fn.system("cd " .. basedir .. " && go test -v -coverprofile=coverage.out .")
 
     if vim.v.shell_error ~= 0 then
       r.success = false
