@@ -48,6 +48,8 @@ function Visualiser.results(results, success)
       row = math.floor((vim.o.lines - math.floor(vim.o.lines * 0.5)) / 1),
       style = "minimal",
     })
+
+    vim.api.nvim_buf_set_keymap(buf, "n", "<esc>", ":close<CR>", { noremap = true, silent = true })
     vim.api.nvim_buf_set_keymap(buf, "n", "q", ":close<CR>", { noremap = true, silent = true })
     vim.api.nvim_buf_set_option(buf, "modifiable", false)
 
