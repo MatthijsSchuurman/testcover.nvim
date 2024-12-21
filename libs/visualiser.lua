@@ -39,12 +39,24 @@ function Visualiser.results(results, success)
   if success then
     vim.notify("TestCover: Tests passed", "info")
   else
-    vim.notify("TestCover: Tests failed\n\n\n" .. Visualiser.formatResults(results), "error")
-  end
-end
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_open_win(buf, true, {
+      relative = "editor",
+      width = math.floor(vim.o.columns * 1.0),
+      height = math.floor(vim.o.lines * 0.5),
+      col = math.floor((vim.o.columns - math.floor(vim.o.columns * 1.0)) / 2),
+      row = math.floor((vim.o.lines - math.floor(vim.o.lines * 0.5)) / 1),
+      style = "minimal",
+    })
+    vim.api.nvim_buf_set_keymap(buf, "n", "q", ":close<CR>", { noremap = true, silent = true })
+    vim.api.nvim_buf_set_option(buf, "modifiable", false)
 
-function Visualiser.formatResults(results)
-  return results:gsub("\x1b%[[%d;]*[mK]", "")
+    local tmpfile = vim.fn.tempname()
+    local file = io.open(tmpfile, "w")
+    file:write(results)
+    file:close()
+    vim.fn.termopen("cat " .. tmpfile) --
+  end
 end
 
 return Visualiser

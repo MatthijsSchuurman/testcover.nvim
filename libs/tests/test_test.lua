@@ -21,7 +21,7 @@ describe("Test", function()
     local patterns = test.getSupportedPattern()
 
     -- Then
-    assert.same({"*.go", "*.lua"}, patterns)
+    assert.same({"*.go", "*.feature", "*.lua"}, patterns)
   end)
 
   it("should get file type", function()
@@ -36,7 +36,6 @@ describe("Test", function()
   end)
 
   it("should get results from popup", function()
-    return -- Skip since it doesn't seem to fail
     -- Given
     local ms = 100
 
@@ -61,12 +60,9 @@ describe("Test", function()
 
     -- When
     results = test.getResultsFromPopup("TEST MARKER", ms)
-    file = io.open("test.txt", "w")
-    file:write(results)
-    file:close()
 
     -- Then
-    assert.equal("MARKER with text", results)
+    assert.equal("TEST MARKER SHOULD EXIST", results)
   end)
 
   it("should run Go tests", function()
@@ -82,6 +78,21 @@ describe("Test", function()
     assert.is_true(stringContains(testResults.results, "PASS"))
     assert.is_true(fileExists(testResults.coverageFilename))
     os.remove(testResults.coverageFilename)
+  end)
+
+  it("should run feature tests", function()
+    -- Given
+    local filename = "libs/tests/example/features/test.feature"
+
+    -- When
+    local testResults, error = test.run(filename)
+    print(testResults.results)
+
+    -- Then
+    assert.is_nil(error)
+    assert.equal("feature", testResults.type)
+    assert.is_true(stringContains(testResults.results, "PASS"))
+    assert.is_nil(testResults.coverageFilename)
   end)
 
   it("should not run unknown type", function()

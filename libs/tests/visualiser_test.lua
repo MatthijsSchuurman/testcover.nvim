@@ -107,16 +107,4 @@ describe("Visualiser", function()
     -- Then
     -- Just check that the function does not throw an error
   end)
-
-  it("should format test results", function()
-    -- Given
-    local testResults = "[0;32mPASS[0m"
-
-    -- When
-    local result = visualiser.formatResults(testResults)
-
-    -- Then
-    assert.equal("PASS", result)
-  end)
-
 end)

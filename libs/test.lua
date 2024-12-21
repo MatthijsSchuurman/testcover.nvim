@@ -1,7 +1,7 @@
 local Test = {}
 
 function Test.getSupportedPattern()
-  return {"*.go", "*.lua"}
+  return {"*.go", "*.feature", "*.lua"}
 end
 
 function Test.getFileType(filename)
@@ -36,6 +36,34 @@ function Test.getResultsFromPopup(marker, ms)
   return results
 end
 
+
+function Test.findTestFile(filename, type)
+  local testFilename = string.gsub(filename, "%.(%w+)$", "_test.%1")
+  if(type == "lua") then -- replace filename_test.lua with tests/filename_test.lua
+    testFilename = testFilename:gsub("([^/]+)$", "tests/%1")
+  end
+
+  if vim.fn.filereadable(testFilename) == 1 then
+    return testFilename
+  end
+
+  local integrationTestFilename = string.gsub(filename, "%.(%w+)$", "_integration_test.%1")
+  if vim.fn.filereadable(integrationTestFilename) == 1 then
+    return integrationTestFilename
+  end
+
+  return nil, {
+    type = "error",
+    section = "Test.run",
+    message = "Test file not found",
+    data = {
+      filename = filename,
+      testFilename = testFilename,
+      integrationTestFilename = integrationTestFilename,
+    }
+  }
+end
+
 function Test.run(filename)
   local r = {
     type,
@@ -50,31 +78,15 @@ function Test.run(filename)
 
   r.type = Test.getFileType(filename)
 
-  local testFilename = filename
-  if not string.match(testFilename, "_test") then -- code file, find test file
-    testFilename = string.gsub(filename, "%.(%w+)$", "_test.%1")
-    if(r.type == "lua") then -- replace filename_test.lua with tests/filename_test.lua
-      testFilename = testFilename:gsub("([^/]+)$", "tests/%1")
-    end
-
-    if vim.fn.filereadable(testFilename) == 0 then
-      local integrationTestFilename = string.gsub(filename, "%.(%w+)$", "_integration_test.%1")
-      if vim.fn.filereadable(testFilename) == 0 then
-        return nil, {
-          type = "error",
-          section = "Test.run",
-          message = "Test file not found",
-          data = {
-            filename = filename,
-            testFilename = testFilename,
-            integrationTestFilename = integrationTestFilename,
-          }
-        }
+  if r.type == "go" then
+    if not string.match(filename, "_test") then -- code file, find test file
+      local error
+      filename, error = Test.findTestFile(filename, r.type)
+      if error then
+        return nil, error
       end
     end
-  end
 
-  if r.type == "go" then
     local basedir = vim.fn.fnamemodify(filename, ":h")
     r.coverageFilename = basedir .. "/coverage.out"
 
@@ -85,11 +97,29 @@ function Test.run(filename)
     else
       r.success = true
     end
-  elseif r.type == "lua" then
-    local test_harness = require("plenary.test_harness")
-    test_harness.test_file(testFilename)
+  elseif r.type == "feature" then -- Cucumber
+    local basedir = vim.fn.fnamemodify(filename, ":h")
 
-    r.results = Test.getResultsFromPopup("Testing:", 1000)
+    r.results = vim.fn.system("cd " .. basedir .. "/.. && go test -v .")
+
+    if vim.v.shell_error ~= 0 then
+      r.success = false
+    else
+      r.success = true
+    end
+  elseif r.type == "lua" then
+    if not string.match(filename, "_test") then -- code file, find test file
+      local error
+      filename, error = Test.findTestFile(filename, r.type)
+      if error then
+        return nil, error
+      end
+    end
+
+    local test_harness = require("plenary.test_harness")
+    test_harness.test_file(filename)
+
+    r.results = Test.getResultsFromPopup("Errors :", 1000)
 
     if r.results:find("Fail  ") then
       r.success = false
