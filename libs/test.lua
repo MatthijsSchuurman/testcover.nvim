@@ -1,7 +1,7 @@
 local Test = {}
 
 function Test.getSupportedPattern()
-  return {"*.go", "*.feature", "*.lua"}
+  return {"*.go", "*.lua", "*.feature"}
 end
 
 function Test.getFileType(filename)
@@ -78,16 +78,41 @@ function Test.run(filename)
 
   r.type = Test.getFileType(filename)
 
-  if r.type == "go" then
-    if not string.match(filename, "_test") then -- code file, find test file
-      local error
-      filename, error = Test.findTestFile(filename, r.type)
-      if error then
-        return nil, error
-      end
-    end
+  local testFilename = nil
+  local basedir = vim.fn.fnamemodify(testFilename, ":h")
 
-    local basedir = vim.fn.fnamemodify(filename, ":h")
+  if string.match(filename, "_test") then -- something_test.* file
+    testFilename = filename
+  elseif string.match(filename, "steps%.go$") then -- steps.go file
+    testFilename = filename
+  elseif string.match(filename, "%.feature$") then -- Gherkin feature file
+    r.type = "go"
+    testFilename = filename
+
+    local dir = vim.fn.fnamemodify(filename, ":p:h")
+    while dir and dir ~= "/" do
+      if vim.fn.filereadable(dir .. "/go.mod") == 1 then
+        basedir = dir
+        break
+      end
+      dir = vim.fn.fnamemodify(dir, ":h")
+    end
+  elseif vim.fn.filereadable((filename:gsub("(%w+)%.(%w+)$", "%1_test.%2"))) == 1 then -- Find _test file
+    testFilename = filename:gsub("(%w+)%.(%w+)$", "%1_test.%2")
+  elseif vim.fn.filereadable((filename:gsub("(%w+)%.(%w+)$", "tests/%1_test.%2"))) == 1 then -- Find _test file
+    testFilename = filename:gsub("(%w+)%.(%w+)$", "tests/%1_test.%2")
+  else
+    return nil, {
+      type = "error",
+      section = "Test.run",
+      message = "Test file not found",
+      data = {
+        filename = filename,
+      }
+    }
+  end
+
+  if r.type == "go" then
     r.coverageFilename = basedir .. "/coverage.out"
 
     r.results = vim.fn.system("cd " .. basedir .. " && go test -v -coverprofile=coverage.out .")
