@@ -1,7 +1,7 @@
 local Test = {}
 
 function Test.getSupportedPattern()
-  return {"*.go", "*.lua", "*.feature"}
+  return {"*.go", "*.feature", "*.lua"}
 end
 
 function Test.getFileType(filename)
@@ -41,6 +41,8 @@ function Test.findTestFile(filename, type)
   local testFilename = string.gsub(filename, "%.(%w+)$", "_test.%1")
   if(type == "lua") then -- replace filename_test.lua with tests/filename_test.lua
     testFilename = testFilename:gsub("([^/]+)$", "tests/%1")
+  elseif string.match(filename, "steps%.go$") then
+    testFilename = filename
   end
 
   if vim.fn.filereadable(testFilename) == 1 then
@@ -78,43 +80,19 @@ function Test.run(filename)
 
   r.type = Test.getFileType(filename)
 
-  local testFilename = nil
-  local basedir = vim.fn.fnamemodify(testFilename, ":h")
-
-  if string.match(filename, "_test") then -- something_test.* file
-    testFilename = filename
-  elseif string.match(filename, "steps%.go$") then -- steps.go file
-    testFilename = filename
-  elseif string.match(filename, "%.feature$") then -- Gherkin feature file
-    r.type = "go"
-    testFilename = filename
-
-    local dir = vim.fn.fnamemodify(filename, ":p:h")
-    while dir and dir ~= "/" do
-      if vim.fn.filereadable(dir .. "/go.mod") == 1 then
-        basedir = dir
-        break
-      end
-      dir = vim.fn.fnamemodify(dir, ":h")
-    end
-  elseif vim.fn.filereadable((filename:gsub("(%w+)%.(%w+)$", "%1_test.%2"))) == 1 then -- Find _test file
-    testFilename = filename:gsub("(%w+)%.(%w+)$", "%1_test.%2")
-  elseif vim.fn.filereadable((filename:gsub("(%w+)%.(%w+)$", "tests/%1_test.%2"))) == 1 then -- Find _test file
-    testFilename = filename:gsub("(%w+)%.(%w+)$", "tests/%1_test.%2")
-  else
-    return nil, {
-      type = "error",
-      section = "Test.run",
-      message = "Test file not found",
-      data = {
-        filename = filename,
-      }
-    }
-  end
-
   if r.type == "go" then
+    if not string.match(filename, "_test") then -- code file, find test file
+      local error
+      filename, error = Test.findTestFile(filename, r.type)
+      if error then
+        return nil, error
+      end
+    end
+
+    local basedir = vim.fn.fnamemodify(filename, ":h")
     r.coverageFilename = basedir .. "/coverage.out"
 
+    vim.notify("TestCover: Testing " .. filename)
     r.results = vim.fn.system("cd " .. basedir .. " && go test -v -coverprofile=coverage.out .")
 
     if vim.v.shell_error ~= 0 then
@@ -125,6 +103,7 @@ function Test.run(filename)
   elseif r.type == "feature" then -- Cucumber
     local basedir = vim.fn.fnamemodify(filename, ":h")
 
+    vim.notify("TestCover: Testing " .. filename)
     r.results = vim.fn.system("cd " .. basedir .. "/.. && go test -v .")
 
     if vim.v.shell_error ~= 0 then
@@ -142,6 +121,8 @@ function Test.run(filename)
     end
 
     local test_harness = require("plenary.test_harness")
+
+    vim.notify("TestCover: Testing " .. filename)
     test_harness.test_file(filename)
 
     r.results = Test.getResultsFromPopup("Errors :", 1000)

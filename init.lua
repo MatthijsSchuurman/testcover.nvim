@@ -12,7 +12,7 @@ function M.run()
 
   local testResults, error = test.run()
   if error then
-    vim.notify("TestCover failed: " .. error.message, "error")
+    vim.notify("TestCover: " .. error.message, "error")
     vim.b.TestCoverFailed = true
     return
   end
