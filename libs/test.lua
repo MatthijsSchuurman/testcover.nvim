@@ -1,7 +1,7 @@
 local Test = {}
 
 function Test.getSupportedPattern()
-  return {"*.go", "*.feature", "*.lua"}
+  return {"*.go", "*.zig", "*.feature", "*.lua"}
 end
 
 function Test.getFileType(filename)
@@ -94,6 +94,26 @@ function Test.run(filename)
 
     vim.notify("TestCover: Testing " .. filename)
     r.results = vim.fn.system("cd " .. basedir .. " && go test -v -coverprofile=coverage.out .")
+
+    if vim.v.shell_error ~= 0 then
+      r.success = false
+    else
+      r.success = true
+    end
+  elseif r.type == "zig" then
+    if not string.match(filename, "_test") then -- code file, find test file
+      local error
+      filename, error = Test.findTestFile(filename, r.type)
+      if error then
+        return nil, error
+      end
+    end
+
+    local basedir = vim.fn.fnamemodify(filename, ":h")
+    -- r.coverageFilename = basedir .. "/test.ll"
+
+    vim.notify("TestCover: Testing " .. filename)
+    r.results = vim.fn.system("zig build test -Dtest="..filename)
 
     if vim.v.shell_error ~= 0 then
       r.success = false

@@ -21,7 +21,7 @@ describe("Test", function()
     local patterns = test.getSupportedPattern()
 
     -- Then
-    assert.same({"*.go", "*.feature", "*.lua"}, patterns)
+    assert.same({"*.go", "*.zig", "*.feature", "*.lua"}, patterns)
   end)
 
   it("should get file type", function()
