@@ -113,7 +113,7 @@ function Test.run(filename)
     -- r.coverageFilename = basedir .. "/test.ll"
 
     vim.notify("TestCover: Testing " .. filename)
-    r.results = vim.fn.system("zig build test -Dtest="..filename)
+    r.results = vim.fn.system("zig build test -Dfile="..filename)
 
     if vim.v.shell_error ~= 0 then
       r.success = false

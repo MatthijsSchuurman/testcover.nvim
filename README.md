@@ -35,6 +35,7 @@ require("packer").use({
 | Lua        | No   | No       |
 | Lua Neovim | Yes  | No       |
 | Python     | No   | No       |
+| Zig | Yes   | No       |
 
 ## License
 This project is licensed under the terms of the [MIT license](LICENSE.md).
