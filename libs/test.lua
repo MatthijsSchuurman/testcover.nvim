@@ -101,19 +101,14 @@ function Test.run(filename)
       r.success = true
     end
   elseif r.type == "zig" then
-    if not string.match(filename, "_test") then -- code file, find test file
-      local error
-      filename, error = Test.findTestFile(filename, r.type)
-      if error then
-        return nil, error
-      end
-    end
-
     local basedir = vim.fn.fnamemodify(filename, ":h")
     -- r.coverageFilename = basedir .. "/test.ll"
 
-    vim.notify("TestCover: Testing " .. filename)
-    r.results = vim.fn.system("zig build test -Dfile="..filename)
+    local filter=vim.fn.fnamemodify(filename, ":r")
+    filter=filter:gsub("/", ".")
+
+    vim.notify("TestCover: Testing filter " .. filter)
+    r.results = vim.fn.system("pwd; zig build test -Dfilter="..filter)
 
     if vim.v.shell_error ~= 0 then
       r.success = false
